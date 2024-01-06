@@ -3,6 +3,7 @@ import Router from './components/Router';
 import Navbar from './components/Navbar';
 import { ThemeProvider } from '@fluentui/react/lib/Theme';
 import { FluentProvider, webDarkTheme, Theme } from '@fluentui/react-components';
+import { PageProvider } from './contexts/PageContext';
 
 const myTheme = {
   palette: {
@@ -34,10 +35,12 @@ const myTheme = {
 function App() {
   // Apply a style to the body to set the background color
   document.body.style.backgroundColor = webDarkTheme.colorNeutralBackground1;
+
+  
 //#082338 - dark blue
 //#1f1f1f - dark grey
   return (
-
+    <PageProvider>
       <ThemeProvider theme={myTheme}>
         <FluentProvider theme={webDarkTheme as Partial<Theme>}>
           <Navbar />
@@ -45,6 +48,7 @@ function App() {
         </FluentProvider>
         
       </ThemeProvider>
+      </PageProvider>
   );
 }
 

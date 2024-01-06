@@ -8,6 +8,7 @@ import {
   Caption1,
 } from "@fluentui/react-components";
 import { FluentProvider, webDarkTheme, Theme } from '@fluentui/react-components';
+import { usePage } from "../contexts/PageContext";
 
 
 const useStyles = makeStyles({
@@ -15,26 +16,28 @@ const useStyles = makeStyles({
   container: {
     backgroundColor: webDarkTheme.colorBrandShadowKey,
     display: "flex",
-    flexDirection: "column",
+    justifyContent: "space-between",
+    flexDirection: "row",
     ...shorthands.padding("16px"),
     ...shorthands.gap("16px"),
   },
   header: {
-    width: "300px",
   },
 });
 
 const resolveAsset = (asset: string) => {
-  const ASSET_URL =
-    "https://raw.githubusercontent.com/microsoft/fluentui/master/packages/react-components/react-card/stories/assets/";
 
-  return `${ASSET_URL}${asset}`;
+  return `${asset}`;
 };
 
  const Navbar = () => {
   const styles = useStyles();
+  const page  = usePage();
 
-  const powerpointLogoURL = resolveAsset("pptx.png");
+
+
+  const logoURL = resolveAsset("logo32.png");
+
 
   return (
     <div className={styles.container}>
@@ -43,8 +46,34 @@ const resolveAsset = (asset: string) => {
         className={styles.header}
         image={{
           as: "img",
-          src: powerpointLogoURL,
-          alt: "Microsoft PowerPoint logo",
+          src: logoURL,
+          alt: "run to the hills logo",
+          width: "32px",
+        }}
+        header={
+          <Body1 style={{paddingTop:"5px"}}>
+            <b>run to the hills</b>
+          </Body1>
+        }
+   
+      />
+       <CardHeader
+        className={styles.header}
+        
+        header={
+          <Body1 style={{paddingTop:"5px"}}>
+            <b>{page.pageName}</b>
+          </Body1>
+        }
+   
+      />
+       <CardHeader
+        className={styles.header}
+        image={{
+          as: "img",
+          src: logoURL,
+          alt: "run to the hills logo",
+          width: "32px",
         }}
         header={
           <Body1 style={{paddingTop:"5px"}}>
