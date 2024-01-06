@@ -11,7 +11,7 @@ export const usePage = () => {
   const contextValue = useContext(PageContext);
 
   if (!contextValue) {
-    throw new Error("usePage must be used within a PageNameProvider");
+    throw new Error("usePage must be used within a PageProvider");
   }
 
   return contextValue;
