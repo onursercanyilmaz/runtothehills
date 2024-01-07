@@ -12,6 +12,7 @@ export default function Router() {
         <Route path='/login' Component={LoginPage} />
         <Route path='/path' Component={PathPage} />
         <Route path='/' Component={HomePage} />
+
       </Routes>
     </Fragment>
   );

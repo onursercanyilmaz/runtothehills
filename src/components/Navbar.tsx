@@ -9,6 +9,8 @@ import {
 } from "@fluentui/react-components";
 import { FluentProvider, webDarkTheme, Theme } from '@fluentui/react-components';
 import { usePage } from "../contexts/PageContext";
+import { PersonaCard } from "./PersonaCard";
+import { useLocation, useNavigate } from "react-router-dom";
 
 
 const useStyles = makeStyles({
@@ -33,6 +35,8 @@ const resolveAsset = (asset: string) => {
  const Navbar = () => {
   const styles = useStyles();
   const page  = usePage();
+  const navigate = useNavigate();
+  const location = useLocation();
 
 
 
@@ -43,6 +47,8 @@ const resolveAsset = (asset: string) => {
     <div className={styles.container}>
       
       <CardHeader
+      onClick={()=> (location.pathname!=="/") && navigate("/")}
+      style={{cursor:"pointer"}}
         className={styles.header}
         image={{
           as: "img",
@@ -69,15 +75,10 @@ const resolveAsset = (asset: string) => {
       />
        <CardHeader
         className={styles.header}
-        image={{
-          as: "img",
-          src: logoURL,
-          alt: "run to the hills logo",
-          width: "32px",
-        }}
+       
         header={
           <Body1 style={{paddingTop:"5px"}}>
-            <b>run to the hills</b>
+           <PersonaCard username="Onur Sercan Yılma"/>
           </Body1>
         }
    
