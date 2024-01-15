@@ -1,30 +1,38 @@
 import React from 'react';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { signInWithPopup } from 'firebase/auth';
+import CButton from './CButton';
+import { auth, provider } from '../constants/firebaseConfig';
+import { ArrowEnter16Filled } from "@fluentui/react-icons";
+import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Move the import statement here
 import createSheet from '../process/GoogleSheetsProcess';
 
 const CLIENT_ID: any = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-const buttonName: string = "Login with Google";
+const buttonName: string = "login with google";
 
-interface GoogleAuthProps {
-    onLogin: any;
-}
+interface GoogleAuthProps { }
 
 const GoogleAuth = (props: GoogleAuthProps) => {
-    const handleGoogleLogin = async (response: any) => {
-        if (response?.tokenId) {
-            // Authenticate Google Sheets API and get the sheet ID
-            const sheets = await createSheet(response.tokenId);
+    const navigate = useNavigate(); // Move the declaration here
 
-            // Pass the sheet ID or other relevant data to the parent component
-            props.onLogin({ tokenId: response.tokenId, sheets });
+    const handleLogin = async () => {
+        try {
+            const result = await signInWithPopup(auth, provider);
+            localStorage.setItem("user", JSON.stringify(result.user));
+            createSheet();
+            //navigate("/");
+        } catch (error) {
+            console.log(error);
         }
     };
 
-
     return (
-        <GoogleOAuthProvider clientId={CLIENT_ID}>
-            <GoogleLogin text="signin" onSuccess={handleGoogleLogin} />
-        </GoogleOAuthProvider>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <CButton style={{ width: '200px', height: "50px" }} buttonName={buttonName} onClick={handleLogin} icon={
+                <img src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA" width={25} alt="Add Folder" />
+            }
+            />
+        </div>
     );
 };
 
