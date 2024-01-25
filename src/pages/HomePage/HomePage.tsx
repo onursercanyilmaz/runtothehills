@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { usePage } from '../../contexts/PageContext';
 import Modal from '../../components/Modal';
 import CButton from '../../components/CButton';
-import { AddCircle32Filled } from "@fluentui/react-icons";
+import { AddCircle32Filled, AppsListDetail24Filled } from "@fluentui/react-icons";
 import { Input, Label } from '@fluentui/react-components';
 import { getUserData, addItemToPath, addPath } from '../../process/GoogleSheetsProcess';
 import { useNavigate } from 'react-router-dom';
@@ -80,11 +80,11 @@ export default function HomePage() {
     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
       {userData.map((path: any) => (
         <div id={path.pathId} key={path.pathId} style={{ margin: "50px", flex: "0 0 calc(10% - 100px)" }}>
-          <CButton style={{ width: '200px', height: "200px" }} buttonName={path.pathName} icon={<AddCircle32Filled />} onClick={() => alert(path.pathId)} />
+          <CButton style={{ width: '200px', height: "200px" }} buttonName={path.pathName} icon={<AppsListDetail24Filled />} onClick={() => alert(path.pathId)} />
         </div>
       ))}
 
-      <div id="add-new-path" style={{ margin: "50px", flex: "0 0 calc(50% - 100px)" }}>
+      <div id="add-new-path" style={{ margin: "50px", flex: "0 0 calc(10% - 100px)" }}>
         <Modal
           button={<CButton style={{ width: '200px', height: "200px" }} secondaryContent={"add new path"} buttonName={"add"} icon={<AddCircle32Filled />} onClick={() => setIsOpen(true)} />}
           dialogTitle={'add new path'}

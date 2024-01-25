@@ -45,7 +45,12 @@ export const addPath = async (userUid: any, pathName: any) => {
         // Add a new document to the paths subcollection
         const newPathRef = await addDoc(pathsCollectionRef, {
             pathName: pathName,
-            pathId: pathName.toLowerCase().replace(/ /g, '-'),
+            pathId: pathName
+                .toLowerCase()
+                .replace(/ /g, '-')
+                .normalize('NFD') // Normalization Form Canonical Decomposition
+                .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+                .replace(/[^a-z0-9-]/g, ''),
             items: [],
             // Add other properties as needed
         });
