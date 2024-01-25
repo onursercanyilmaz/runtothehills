@@ -10,8 +10,6 @@ import { handleLogin } from '../constants/LoginProcess';
 const buttonName: string = "login with google";
 interface GoogleAuthProps { }
 
-
-
 const GoogleAuth = (props: GoogleAuthProps) => {
     const navigate = useNavigate();
 
