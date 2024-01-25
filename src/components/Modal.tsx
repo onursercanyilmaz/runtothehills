@@ -23,6 +23,8 @@ const useStyles = makeStyles({
 });
 
 interface ModalProps {
+  setIsOpen: any;
+  isOpen: boolean;
   dialogTitle: string;
   button: any;
   handleSubmit: () => void;
@@ -36,22 +38,23 @@ const Modal = (props: ModalProps) => {
     props.handleSubmit();
   };
   return (
-    <Dialog modalType="non-modal">
+    <Dialog modalType="modal" open={props.isOpen}>
       <DialogTrigger disableButtonEnhancement>
         {props.button}
 
       </DialogTrigger>
       <DialogSurface aria-describedby={undefined}>
+
         <form onSubmit={handleSubmit}>
           <DialogBody>
-            <DialogTitle>{props.dialogTitle}</DialogTitle>
+            <DialogTitle  >{props.dialogTitle}</DialogTitle>
             <DialogContent className={styles.content}>
               {props.dialogBody}
             </DialogContent>
             <DialogActions>
 
               <DialogTrigger disableButtonEnhancement>
-                <Button appearance="secondary">Close</Button>
+                <Button appearance="secondary" onClick={props.setIsOpen}>Close</Button>
               </DialogTrigger>
               <Button type="submit" appearance="primary">
                 Submit

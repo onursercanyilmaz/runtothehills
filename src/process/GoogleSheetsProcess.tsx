@@ -90,6 +90,6 @@ export const getUserData = async (userUid: any) => {
         return userData;
     } catch (error: any) {
         console.error('Error getting user data from Firestore:', error.message);
-        return null;
+        return [];
     }
 };
