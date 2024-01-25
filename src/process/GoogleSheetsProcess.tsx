@@ -1,47 +1,95 @@
-import { arrayUnion, doc, getDoc, setDoc } from 'firebase/firestore';
+import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { db } from '../constants/firebaseConfig';
 
-export const addDataToSheet = async (userUid: any, data: any) => {
+
+/*// Function to add a new path for the user
+export const addPath = async (userUid: any, pathName: any) => {
     try {
-        const sheetTitle = 'runtothehillsdata';
-        const collectionRef = doc(db, sheetTitle, userUid);
+        const userDocRef = doc(db, 'users', userUid);
+        const pathsCollectionRef = collection(userDocRef, 'paths');
 
-        // Check if the data already exists in the entries array
-        const snapshot = await getDoc(collectionRef);
-        const existingData = snapshot.exists() ? snapshot.data().entries : [];
+        // Add a new document to the paths subcollection
+        const newPathRef = await addDoc(pathsCollectionRef, {
+            pathName: pathName,
+            pathId: pathName.toLowerCase().replace(/ /g, '-'),
+            items: [],
+            // Add other properties as needed
+        });
 
-        if (!existingData.includes(data)) {
-            // Data does not exist, add it to the collection
-            await setDoc(collectionRef, { entries: arrayUnion(data) }, { merge: true });
-            console.log(`Data added to Firestore collection for user ${userUid}.`);
-        } else {
-            console.log(`Data already exists in Firestore collection for user ${userUid}.`);
-        }
+        console.log(`Path created for user ${userUid}. Path ID: ${newPathRef.id}`);
+        return newPathRef.id; // Return the generated path ID if needed
     } catch (error: any) {
-        console.error('Error adding data to Firestore collection:', error.message);
+        console.error('Error creating path:', error.message);
+    }
+};
+*/
+export const addPath = async (userUid: any, pathName: any) => {
+    try {
+        const userDocRef = doc(db, 'users', userUid);
+        const pathsCollectionRef = collection(userDocRef, 'paths');
+
+        // Check if a path with the same pathId already exists
+        const existingPathQuery = query(
+            pathsCollectionRef,
+            where('pathId', '==', pathName.toLowerCase().replace(/ /g, '-'))
+        );
+        const existingPathSnapshot = await getDocs(existingPathQuery);
+
+        if (!existingPathSnapshot.empty) {
+            // Path with the same pathId already exists
+            console.log(`Path with pathId ${pathName.toLowerCase().replace(/ /g, '-')} already exists for user ${userUid}.`);
+            // You can handle this situation as needed, e.g., throw an error or return null
+            return null;
+        }
+
+        // Add a new document to the paths subcollection
+        const newPathRef = await addDoc(pathsCollectionRef, {
+            pathName: pathName,
+            pathId: pathName.toLowerCase().replace(/ /g, '-'),
+            items: [],
+            // Add other properties as needed
+        });
+
+        console.log(`Path created for user ${userUid}. Path ID: ${newPathRef.id}`);
+        return newPathRef.id; // Return the generated path ID if needed
+    } catch (error: any) {
+        console.error('Error creating path:', error.message);
+        return null;
     }
 };
 
+// Function to add a new item to a specific path
+export const addItemToPath = async (userUid: any, pathId: any, itemData: any) => {
+    try {
+        const userDocRef = doc(db, 'users', userUid);
+        const pathDocRef = doc(userDocRef, 'paths', pathId);
+
+        // Update the path document to add a new item to the "items" array
+        await updateDoc(pathDocRef, {
+            items: arrayUnion(itemData),
+        });
+
+        console.log(`Item added to path ${pathId} for user ${userUid}.`);
+    } catch (error: any) {
+        console.error('Error adding item to path:', error.message);
+    }
+};
 
 export const getUserData = async (userUid: any) => {
     try {
-        const sheetTitle = 'runtothehillsdata';
-        const collectionRef = doc(db, sheetTitle, userUid);
+        const userDocRef = doc(db, 'users', userUid);
+        const pathsCollectionRef = collection(userDocRef, 'paths');
 
-        const snapshot = await getDoc(collectionRef);
+        // Get all documents from the "paths" subcollection
+        const snapshot = await getDocs(pathsCollectionRef);
 
-        if (snapshot.exists()) {
-            const userData = snapshot.data().entries || [];
-            console.log(`User data retrieved for user ${userUid}:`, userData);
-            return userData;
-        } else {
-            console.log(`No data found for user ${userUid}.`);
-            return null;
-        }
+        // Extract data from each document in the subcollection
+        const userData = snapshot.docs.map((doc: any) => doc.data());
+
+        console.log(`User data retrieved for user ${userUid}:`, userData);
+        return userData;
     } catch (error: any) {
         console.error('Error getting user data from Firestore:', error.message);
         return null;
     }
 };
-
-
