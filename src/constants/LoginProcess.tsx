@@ -16,7 +16,7 @@ export const handleLogout = async (navigate: NavigateFunction) => {
     try {
         await auth.signOut();
         localStorage.removeItem("user");
-        navigate("/login");
+        navigate("/login", { replace: true });
     } catch (error) {
         console.log(error);
     }

@@ -38,8 +38,10 @@ const LoginPage = () => {
       <img src="logo192.png" style={{ margin: "200px", marginBottom: "5px" }} alt="Login Page" />
       <h1 style={{ marginBottom: "100px" }}>run to the hills</h1>
       <GoogleAuth />
+
+      <iframe style={{ borderRadius: "12px", marginTop: "50px" }} src="https://open.spotify.com/embed/track/4Zc7TCHzuNwL0AFBlyLdyr?utm_source=generator&theme=0" width="25%" height="152" frameBorder="0" allowFullScreen={true} allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
       <Modal
-        button={<Button style={{ marginTop: "50px", border: "none" }} icon={<Settings24Filled />} content="settings" onClick={() => setIsOpen(true)} />}
+        button={<Button style={{ marginTop: "20px", border: "none" }} icon={<Settings24Filled />} content="settings" onClick={() => setIsOpen(true)} />}
         dialogTitle={"settings"}
         handleSubmit={() => handleConfigSubmit()}
         isOpen={isOpen}
@@ -57,7 +59,7 @@ const LoginPage = () => {
           <Input required type="text" id={"measurementId"} placeholder='measurementId' onChange={(e: any) => handleConfigChange(e, "measurementId")} />
           <Button style={{ marginTop: "50px", border: "none" }} icon={<Delete24Filled />} content="settings" onClick={() => { localStorage.removeItem("userConfig"); window.location.reload(); }} />
         </>} />
-    </div>
+    </div >
   );
 };
 
