@@ -11,7 +11,7 @@ interface CButtonProps {
   buttonName: any
   icon?: any
   className?: any
-
+  id?: any
 }
 
 export default function CButton(props: CButtonProps) {
@@ -19,6 +19,7 @@ export default function CButton(props: CButtonProps) {
     <>
       {props.before}
       <CompoundButton
+        id={props.id}
         className={props.className}
         icon={props.icon !== null && props.icon}
         secondaryContent={props.secondaryContent}

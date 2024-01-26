@@ -4,16 +4,28 @@ import { ArrowRight24Filled } from "@fluentui/react-icons";
 import { Button, Label } from '@fluentui/react-components';
 import './components.css'
 
-export default function Item() {
+interface ItemProps {
+    itemDescription: string
+    itemName: string
+    progress: string | number
+    navigateToItemLink: any
+    openEditItemModal: any
+    itemImage: string
+    platform: string
+    id: string
+}
+
+export default function Item(props: ItemProps) {
     return (
         <div style={{ textAlign: "center" }}>
             <CButton
+                id={props.id}
                 className="itemButton"
                 buttonName={
                     <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
                         <div style={{ display: "flex" }}>
                             <img
-                                src="https://play-lh.googleusercontent.com/oDuTGEHru1KMr3QOfQfPKgIdNnlq3WWQxpBYND23r2a7RVnS1HW0t7dyON86Vn_QhtM=w240-h480-rw"
+                                src={props.itemImage}
                                 width={50}
                                 height={50}
                                 style={{ borderRadius: "10%" }}
@@ -21,17 +33,17 @@ export default function Item() {
                             />
                             <div style={{ flexDirection: "column", display: "flex", alignContent: "center", alignSelf: "center", marginLeft: "10px" }}>
                                 <Label style={{ alignSelf: "center", color: "white", fontSize: "20px", }}>
-                                    C# .NET Core Clean Architecture & CQRS Proje Altyapı Kursu 4
+                                    {props.itemName}
                                 </Label>
-                                <Label style={{ color: "white", fontSize: "12px", }}>Item Description</Label>
+                                <Label style={{ color: "white", fontSize: "12px", }}>{props.itemDescription}</Label>
                             </div>
                         </div>
-                        <Label style={{ alignSelf: "center", color: "white", fontSize: "20px" }}>%23</Label>
+                        <Label style={{ alignSelf: "center", color: "white", fontSize: "20px", marginRight: "10px" }}>{props.platform}</Label>
+                        <Label style={{ alignSelf: "center", color: "white", fontSize: "20px", marginRight: "10px" }}>{props.progress}</Label>
                     </div>
                 }
-                after={<Button onClick={() => alert("button clicked")} style={{ borderLeft: "none", height: "100px", marginTop: "20px", backgroundColor: "#1f1f1f", border: "var(--strokeWidthThin) solid var(--colorNeutralStroke1)" }}><ArrowRight24Filled /></Button>}
-                //icon={<AddCircle32Filled />}
-                onClick={() => alert("deneme")}
+                after={<Button onClick={props.navigateToItemLink} style={{ borderLeft: "none", height: "100px", marginTop: "20px", backgroundColor: "#1f1f1f", border: "var(--strokeWidthThin) solid var(--colorNeutralStroke1)" }}><ArrowRight24Filled /></Button>}
+                onClick={props.openEditItemModal}
                 style={{ marginTop: "20px", width: '75%', height: "100px", alignIsems: "left", justifyContent: "left", backgroundColor: "#1f1f1f", }}
             />
 

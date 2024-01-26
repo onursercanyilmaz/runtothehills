@@ -1,9 +1,9 @@
 export interface IItemsData {
     id: string;
-    itemName: string;
+    name: string;
     image: string;
     description: string;
-    itemLink: string;
+    link: string;
     progress: number;
     platform: string;
 }
