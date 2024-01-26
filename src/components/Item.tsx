@@ -10,7 +10,7 @@ export default function Item() {
             <CButton
                 className="itemButton"
                 buttonName={
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
                         <div style={{ display: "flex" }}>
                             <img
                                 src="https://play-lh.googleusercontent.com/oDuTGEHru1KMr3QOfQfPKgIdNnlq3WWQxpBYND23r2a7RVnS1HW0t7dyON86Vn_QhtM=w240-h480-rw"
@@ -26,16 +26,13 @@ export default function Item() {
                                 <Label style={{ color: "white", fontSize: "12px", }}>Item Description</Label>
                             </div>
                         </div>
-                        <div style={{ display: "flex" }}>
-                            <Label style={{ alignSelf: "center", color: "white", fontSize: "20px" }}>%23</Label>
-                            <Button onClick={() => alert("button clicked")} style={{ backgroundColor: "transparent", border: "none", textAlign: "right", height: "75px", margin: "0px" }}><ArrowRight24Filled /></Button>
-                        </div>
+                        <Label style={{ alignSelf: "center", color: "white", fontSize: "20px" }}>%23</Label>
                     </div>
                 }
-                //after={<Button style={{ borderLeft: "none", height: "100px", marginTop: "20px", backgroundColor: "#1f1f1f", border: "var(--strokeWidthThin) solid var(--colorNeutralStroke1)" }}><ArrowRight24Filled /></Button>}
+                after={<Button onClick={() => alert("button clicked")} style={{ borderLeft: "none", height: "100px", marginTop: "20px", backgroundColor: "#1f1f1f", border: "var(--strokeWidthThin) solid var(--colorNeutralStroke1)" }}><ArrowRight24Filled /></Button>}
                 //icon={<AddCircle32Filled />}
                 onClick={() => alert("deneme")}
-                style={{ paddingRight: "0px", marginTop: "20px", width: '75%', height: "100px", alignIsems: "left", justifyContent: "left", backgroundColor: "#1f1f1f", }}
+                style={{ marginTop: "20px", width: '75%', height: "100px", alignIsems: "left", justifyContent: "left", backgroundColor: "#1f1f1f", }}
             />
 
         </div>
