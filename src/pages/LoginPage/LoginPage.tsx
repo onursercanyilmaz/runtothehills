@@ -23,14 +23,12 @@ const LoginPage = () => {
     localStorage.setItem("userConfig", JSON.stringify(config));
     window.location.reload();
     setIsOpen(false);
-
-
-
   }
 
 
   useEffect(() => {
     page.setPageName("Login");
+
   }, []);
 
   return (

@@ -14,10 +14,14 @@ export const handleLogin = async (navigate: NavigateFunction) => {
 
 export const handleLogout = async (navigate: NavigateFunction) => {
     try {
-        await auth.signOut();
         localStorage.removeItem("user");
+        localStorage.removeItem("userData");
+        await auth.signOut();
+
         navigate("/login", { replace: true });
     } catch (error) {
+        localStorage.removeItem("user");
+        localStorage.removeItem("userData");
         console.log(error);
     }
 }

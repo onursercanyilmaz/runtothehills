@@ -5,7 +5,7 @@ import Modal from '../../components/Modal';
 import CButton from '../../components/CButton';
 import { AddCircle32Filled, AppsListDetail24Filled } from "@fluentui/react-icons";
 import { Input, Label } from '@fluentui/react-components';
-import { getUserData, addItemToPath, addPath } from '../../process/GoogleSheetsProcess';
+import { getUserData, addItemToPath, addPath, addItemToPathTwo } from '../../process/GoogleSheetsProcess';
 import { useNavigate } from 'react-router-dom';
 import path from 'path';
 
@@ -63,6 +63,7 @@ export default function HomePage() {
       // Get the user's data
       if (user) {
         const userData = await getUserData(user.uid);
+        localStorage.setItem("userData", JSON.stringify(userData));
         setUserData(userData);
       }
       else {
@@ -80,7 +81,7 @@ export default function HomePage() {
     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
       {userData.map((path: any) => (
         <div id={path.pathId} key={path.pathId} style={{ margin: "50px", flex: "0 0 calc(10% - 100px)" }}>
-          <CButton style={{ width: '200px', height: "200px" }} buttonName={path.pathName} icon={<AppsListDetail24Filled />} onClick={() => alert(path.pathId)} />
+          <CButton style={{ width: '200px', height: "200px" }} buttonName={path.pathName} icon={<AppsListDetail24Filled />} onClick={() => navigate("/path/" + path.pathId)} />
         </div>
       ))}
 
@@ -101,7 +102,7 @@ export default function HomePage() {
             </Label>
           </>} />
       </div>
-
+      <ExampleButton />
     </div>
   );
 }
@@ -126,12 +127,12 @@ const ExampleButton = () => {
     // Add a new path
 
     // Add items to the newly created path
-    await addItemToPath(user.uid, "8KU0YGhzZhuKsYDuuP3p", {
-      itemId: uuidv4(),
-      itemName: 'Item 1',
-      platformName: 'Platform 1',
-      itemLink: 'https://example.com/item1',
-      progress: 'In Progress',
+    await addItemToPathTwo(user.uid, 'net-journey', {
+      id: uuidv4(),
+      name: 'rust',
+      description: 'rust is a systems programming language',
+      url: 'https://www.rust-lang.org/',
+      tags: ['systems', 'programming', 'language'],
     });
 
     console.log('Example data added successfully!');
