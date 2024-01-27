@@ -26,7 +26,7 @@ interface ModalProps {
   setIsOpen: any;
   isOpen: boolean;
   dialogTitle: string;
-  button: any;
+  button?: any;
   handleSubmit: () => void;
   dialogBody: any;
 
@@ -39,10 +39,10 @@ const Modal = (props: ModalProps) => {
   };
   return (
     <Dialog modalType="modal" open={props.isOpen}>
-      <DialogTrigger disableButtonEnhancement>
+      {props.button && <DialogTrigger disableButtonEnhancement>
         {props.button}
 
-      </DialogTrigger>
+      </DialogTrigger>}
       <DialogSurface aria-describedby={undefined}>
 
         <form onSubmit={handleSubmit}>
