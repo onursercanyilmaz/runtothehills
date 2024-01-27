@@ -81,6 +81,7 @@ export default function PathPage(props: PathPageProps) {
         await fetchUserData();
         arrangePath();
         setIsAddModalOpen(false);
+        setItem(defaultItem)
       }
       else if (itemAddResult === null)
         setError("item already exists")
@@ -97,6 +98,7 @@ export default function PathPage(props: PathPageProps) {
         await fetchUserData();
         arrangePath();
         setIsEditModalOpen(false);
+        setItem(defaultItem)
       }
       else if (itemAddResult === null)
         setError("item already exists")
@@ -116,9 +118,7 @@ export default function PathPage(props: PathPageProps) {
 
     }
   }
-  const openExternalWebsite = (url: string) => {
-    window.open(url, '_blank');
-  };
+
 
   useEffect(() => {
 
@@ -139,7 +139,7 @@ export default function PathPage(props: PathPageProps) {
           itemDescription={item.description}
           itemName={item.name}
           progress={item.progress}
-          navigateToItemLink={() => openExternalWebsite(item.link)}
+          navigateToItemLink={item.link}
           openEditItemModal={() => { setError(""); setIsEditModalOpen(true); setItem(item) }}
           itemImage={item.image}
           platform={item.platform}

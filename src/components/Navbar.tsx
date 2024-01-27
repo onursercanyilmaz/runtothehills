@@ -12,6 +12,7 @@ import { PersonaCard } from "./PersonaCard";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SignOut20Filled, ArrowLeft24Filled } from "@fluentui/react-icons";
 import { handleLogout } from "../constants/LoginProcess";
+import dotenv from "dotenv";
 
 const useStyles = makeStyles({
   container: {
@@ -37,7 +38,7 @@ const Navbar = () => {
 
   var user = JSON.parse(localStorage.getItem("user")!);
 
-  const logoURL = resolveAsset("logo32.png");
+  const logoURL = process.env.REACT_APP_LOGO_512
 
   const logout = async () => {
     await handleLogout(navigate);

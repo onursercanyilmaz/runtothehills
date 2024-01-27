@@ -13,22 +13,22 @@ export default function ItemInput(props: ItemInputProps) {
                 item name
             </Label>
             <Input required type="text" id={"name"} placeholder='item name' value={props.item.name} onChange={(e: any) => props.handleItemChange(e)} />
-            <Label required htmlFor={"description"}>
+            <Label htmlFor={"description"}>
                 item description
             </Label>
-            <Input required type="text" id={"description"} placeholder='item description' value={props.item.description} onChange={(e: any) => props.handleItemChange(e)} />
-            <Label required htmlFor={"link"}>
+            <Input type="text" id={"description"} placeholder='item description' value={props.item.description} onChange={(e: any) => props.handleItemChange(e)} />
+            <Label htmlFor={"link"}>
                 item link
             </Label>
-            <Input required type="text" id={"link"} placeholder='item link' value={props.item.link} onChange={(e: any) => props.handleItemChange(e)} />
-            <Label required htmlFor={"image"}>
+            <Input type="text" id={"link"} placeholder='item link' value={props.item.link} onChange={(e: any) => props.handleItemChange(e)} />
+            <Label htmlFor={"image"}>
                 item image
             </Label>
-            <Input required type="text" id={"image"} placeholder='item image' value={props.item.image} onChange={(e: any) => props.handleItemChange(e)} />
-            <Label required htmlFor={"platform"}>
+            <Input type="text" id={"image"} placeholder='item image' value={props.item.image} onChange={(e: any) => props.handleItemChange(e)} />
+            <Label htmlFor={"platform"}>
                 item platform
             </Label>
-            <Input required type="text" id={"platform"} placeholder='item platform' value={props.item.platform} onChange={(e: any) => props.handleItemChange(e)} />
+            <Input type="text" id={"platform"} placeholder='item platform' value={props.item.platform} onChange={(e: any) => props.handleItemChange(e)} />
             <Label required htmlFor={"progress"}>
                 item progress
             </Label>

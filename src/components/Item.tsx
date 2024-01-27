@@ -17,6 +17,9 @@ interface ItemProps {
 }
 
 export default function Item(props: ItemProps) {
+    const openExternalWebsite = (url: string) => {
+        window.open(url, '_blank');
+    };
     return (
         <div style={{ textAlign: "center" }}>
             <CButton
@@ -50,7 +53,7 @@ export default function Item(props: ItemProps) {
                         </Field>
                     </>
                 }
-                after={<Button onClick={props.navigateToItemLink} style={{ borderLeft: "none", height: "100px", marginTop: "20px", backgroundColor: "#1f1f1f", border: "var(--strokeWidthThin) solid var(--colorNeutralStroke1)" }}><ArrowRight24Filled /></Button>}
+                after={urlChecker(props.navigateToItemLink) ? <Button onClick={() => openExternalWebsite(props.navigateToItemLink)} style={{ borderLeft: "none", height: "100px", marginTop: "20px", backgroundColor: "#1f1f1f", border: "var(--strokeWidthThin) solid var(--colorNeutralStroke1)" }}><ArrowRight24Filled /></Button> : ""}
                 onClick={props.openEditItemModal}
                 style={{ marginTop: "20px", paddingBottom: "0px", width: '75%', height: "100px", alignIsems: "left", justifyContent: "left", backgroundColor: "#1f1f1f", }}
             />
