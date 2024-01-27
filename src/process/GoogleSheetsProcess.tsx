@@ -117,3 +117,54 @@ export const addItemToPath = async (userUid: any, userProvidedPathId: any, itemD
         console.error('Error adding/updating item in path:', error.message);
     }
 };
+
+// Function to delete an item from a specific path using user-provided pathId and itemId
+export const deleteItemFromPath = async (userUid: any, userProvidedPathId: any, item: IItemsData) => {
+    try {
+        const userDocRef = doc(db, 'users', userUid);
+        const pathsCollectionRef = collection(userDocRef, 'paths');
+
+        // Check if a path with the user-provided pathId exists
+        const pathQuery = query(
+            pathsCollectionRef,
+            where('pathId', '==', userProvidedPathId)
+        );
+        const pathQuerySnapshot = await getDocs(pathQuery);
+
+        if (pathQuerySnapshot.empty) {
+            // Path with the user-provided pathId does not exist
+            console.log(`Path with pathId ${userProvidedPathId} does not exist for user ${userUid}.`);
+            // You can handle this situation as needed, e.g., throw an error or return null
+            return null;
+        }
+
+        const pathDocRef = pathQuerySnapshot.docs[0].ref;
+
+        // Get the current path document data
+        const pathDocSnapshot = await getDoc(pathDocRef);
+
+        const currentItems = pathDocSnapshot.exists() ? pathDocSnapshot.data()?.items || [] : [];
+
+        // Find the index of the item with the provided itemId
+        const itemIndexToDelete = currentItems.findIndex((item: IItemsData) => item.id === item.id);
+
+        if (itemIndexToDelete !== -1) {
+            // Remove the item from the array
+            currentItems.splice(itemIndexToDelete, 1);
+
+            // Update the path document with the modified items array
+            await updateDoc(pathDocRef, {
+                items: currentItems,
+            });
+
+            console.log(`Item with itemId ${item.id} deleted from path ${userProvidedPathId}.`);
+            return true;
+        } else {
+            // Item with the provided itemId not found
+            console.log(`Item with itemId ${item.id} not found in path ${userProvidedPathId}.`);
+            return null
+        }
+    } catch (error: any) {
+        console.error('Error deleting item from path:', error.message);
+    }
+};

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { usePage } from '../../contexts/PageContext';
 import { useNavigate, useParams } from 'react-router-dom';
-import { addItemToPath, getUserData } from '../../process/GoogleSheetsProcess';
+import { addItemToPath, deleteItemFromPath, getUserData } from '../../process/GoogleSheetsProcess';
 import Item from '../../components/Item';
 import { Button, Input, Label } from '@fluentui/react-components';
 import { AddSquare24Filled, BorderNone24Filled, Delete24Filled } from "@fluentui/react-icons";
@@ -110,9 +110,12 @@ export default function PathPage(props: PathPageProps) {
 
   const handleDeleteItem = async () => {
     if (item) {
-      var itemAddResult = null
-      if (itemAddResult !== null)
+      var itemAddResult = await deleteItemFromPath(user.uid, pathId, item)
+      if (itemAddResult !== null) {
+        await fetchUserData();
+        arrangePath();
         setIsEditModalOpen(false);
+      }
       else
         setError("item couldn't be deleted")
 
