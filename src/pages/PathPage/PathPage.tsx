@@ -7,6 +7,7 @@ import { Button, Input, Label } from '@fluentui/react-components';
 import { AddSquare24Filled } from "@fluentui/react-icons";
 import Modal from '../../components/Modal';
 import { IItemsData } from '../../constants/interfaces/IItemsData';
+import ItemInput from '../../components/ItemInput';
 
 interface PathPageProps {
   pageName?: any
@@ -102,7 +103,7 @@ export default function PathPage(props: PathPageProps) {
       <Item
         itemDescription={'Deneme'}
         itemName={'Deneme'}
-        progress={''}
+        progress={56}
         navigateToItemLink={() => openExternalWebsite("https://www.google.com")}
         openEditItemModal={undefined}
         itemImage={''} platform={''} id={''} />
@@ -146,35 +147,7 @@ export default function PathPage(props: PathPageProps) {
       dialogTitle={'edit item'}
       handleSubmit={() => handleEditItem()}
       dialogBody={
-        <div style={{ display: "flex", flexDirection: "column", rowGap: "10px" }}>
-          <Label required htmlFor={"name"}>
-            item name
-          </Label>
-          <Input required type="text" id={"name"} placeholder='item name' onChange={(e: any) => handleItemChange(e)} />
-          <Label required htmlFor={"description"}>
-            item description
-          </Label>
-          <Input required type="text" id={"description"} placeholder='item description' onChange={(e: any) => handleItemChange(e)} />
-          <Label required htmlFor={"link"}>
-            item link
-          </Label>
-          <Input required type="text" id={"link"} placeholder='item link' onChange={(e: any) => handleItemChange(e)} />
-          <Label required htmlFor={"image"}>
-            item image
-          </Label>
-          <Input required type="text" id={"image"} placeholder='item image' onChange={(e: any) => handleItemChange(e)} />
-          <Label required htmlFor={"platform"}>
-            item platform
-          </Label>
-          <Input required type="text" id={"platform"} placeholder='item platform' onChange={(e: any) => handleItemChange(e)} />
-          <Label required htmlFor={"progress"}>
-            item progress
-          </Label>
-          <Input required type="text" id={"progress"} placeholder='item progress' onChange={(e: any) => handleItemChange(e)} />
-          <Label htmlFor={"item-name-input"} style={{ color: "#f26257" }}>
-            {error}
-          </Label>
-        </div>
+        <ItemInput item={item} error={error} handleItemChange={handleItemChange} />
 
       }
     />
