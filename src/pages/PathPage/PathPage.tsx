@@ -4,14 +4,26 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getUserData } from '../../process/GoogleSheetsProcess';
 import Item from '../../components/Item';
 import { Button, Input, Label } from '@fluentui/react-components';
-import { AddSquare24Filled } from "@fluentui/react-icons";
+import { AddSquare24Filled, BorderNone24Filled } from "@fluentui/react-icons";
 import Modal from '../../components/Modal';
 import { IItemsData } from '../../constants/interfaces/IItemsData';
 import ItemInput from '../../components/ItemInput';
+import { v4 as uuid } from 'uuid';
 
 interface PathPageProps {
   pageName?: any
 }
+
+const defaultItem: IItemsData = {
+  name: "",
+  description: "",
+  link: "",
+  image: "",
+  platform: "",
+  progress: 0,
+  id: uuid()
+}
+
 export default function PathPage(props: PathPageProps) {
   const { pathId } = useParams();
   const navigate = useNavigate();
@@ -19,15 +31,7 @@ export default function PathPage(props: PathPageProps) {
   const [itemsData, setItemsData] = React.useState<any>([]);
   const [isEditModalOpen, setIsEditModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
-  const [item, setItem] = React.useState<IItemsData>({
-    name: '',
-    description: '',
-    link: '',
-    image: '',
-    platform: '',
-    progress: 0,
-    id: ''
-  });
+  const [item, setItem] = React.useState<IItemsData>(defaultItem);
   // Use the usePage hook to access pageName and setPageName
   const page = usePage();
   const user = JSON.parse(localStorage.getItem('user')!);
@@ -57,10 +61,6 @@ export default function PathPage(props: PathPageProps) {
     window.open(url, '_blank');
   };
 
-  const openEditItemModal = (item: any) => {
-    alert("edit item")
-  }
-
   useEffect(() => {
     const fetchUserData = async () => {
       // Get the user's data
@@ -85,64 +85,48 @@ export default function PathPage(props: PathPageProps) {
   }, []);
   return (<div>
 
-    {/* 
-   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-        {pathData ? (itemsData).map((item: any) => {
-          return <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-            <h3>{item.name}</h3>
-            <img src={item.image} style={{ width: "100px", height: "100px" }} />
-          </div>
-        }) : <h3>no items</h3>}
-      </div>
-    </div>
-   */}
-
     <div style={{ marginBottom: "20px", display: "block", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
 
-      <Item
-        itemDescription={'Deneme'}
-        itemName={'Deneme'}
-        progress={56}
-        navigateToItemLink={() => openExternalWebsite("https://www.google.com")}
-        openEditItemModal={undefined}
-        itemImage={''} platform={''} id={''} />
 
-      <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
-        {itemsData.map((item: any) => (
-          <div id={item.id} key={item.id} style={{ margin: "50px", flex: "0 0 calc(10% - 100px)" }}>
-            <Item
-              id={item.id}
-              platform={item.platform}
-              itemDescription={item.description}
-              itemName={item.name}
-              progress={item.progress}
-              navigateToItemLink={() => openExternalWebsite(item.link)}
-              openEditItemModal={() => openEditItemModal(item)}
-              itemImage={item.image}
-            />
-          </div>
-        ))}
-        <Button
-          onClick={() => setIsEditModalOpen(true)}
-          style={{
-            position: "fixed",
-            bottom: 0,
-            right: 0,
-            height: "100px",
-            marginTop: "20px",
-            backgroundColor: "#1f1f1f",
-            border: "var(--strokeWidthThin) solid var(--colorNeutralStroke1)",
-          }}
-        >
-          <AddSquare24Filled />
-        </Button>
-      </div>
+
+
+      {itemsData.length > 0 ? itemsData.map((item: any) => {
+        return (<Item
+          key={item.id}
+          itemDescription={item.description}
+          itemName={item.name}
+          progress={item.progress}
+          navigateToItemLink={() => openExternalWebsite(item.link)}
+          openEditItemModal={() => { setIsEditModalOpen(true); setItem(item) }}
+          itemImage={item.image}
+          platform={item.platform}
+          id={item.id}
+        />)
+      }) :
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", marginTop: "100px", opacity: "0.5" }}>
+          <BorderNone24Filled width={"100px"} />
+          <Label style={{ color: "white", fontSize: "20px", fontWeight: "bold" }}>no items</Label>
+        </div>}
+
+      <Button
+        onClick={() => setIsEditModalOpen(true)}
+        style={{
+          position: "fixed",
+          bottom: 0,
+          right: 0,
+          height: "100px",
+          marginTop: "20px",
+          backgroundColor: "#1f1f1f",
+          border: "var(--strokeWidthThin) solid var(--colorNeutralStroke1)",
+        }}
+      >
+        <AddSquare24Filled />
+      </Button>
 
     </div>
 
     <Modal
-      setIsOpen={() => setIsEditModalOpen(false)}
+      setIsOpen={() => { setIsEditModalOpen(false); setItem(defaultItem) }}
       isOpen={isEditModalOpen}
       dialogTitle={'edit item'}
       handleSubmit={() => handleEditItem()}

@@ -1,5 +1,6 @@
 import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { db } from '../constants/firebaseConfig';
+import { IItemsData } from '../constants/interfaces/IItemsData';
 
 
 /*// Function to add a new path for the user
@@ -23,7 +24,7 @@ export const addPath = async (userUid: any, pathName: any) => {
     }
 };
 */
-export const addPath = async (userUid: any, pathName: any) => {
+export const addPath = async (userUid: any, pathName: any, pathImage?: any) => {
     try {
         const userDocRef = doc(db, 'users', userUid);
         const pathsCollectionRef = collection(userDocRef, 'paths');
@@ -44,6 +45,7 @@ export const addPath = async (userUid: any, pathName: any) => {
 
         // Add a new document to the paths subcollection
         const newPathRef = await addDoc(pathsCollectionRef, {
+            pathImage: pathImage,
             pathName: pathName,
             pathId: pathName
                 .toLowerCase()
@@ -101,7 +103,7 @@ export const getUserData = async (userUid: any) => {
 
 
 // Function to add a new item to a specific path using user-provided pathId
-export const addItemToPathTwo = async (userUid: any, userProvidedPathId: any, itemData: any) => {
+export const addItemToPathTwo = async (userUid: any, userProvidedPathId: any, itemData: IItemsData) => {
     try {
         const userDocRef = doc(db, 'users', userUid);
         const pathsCollectionRef = collection(userDocRef, 'paths');
@@ -127,7 +129,7 @@ export const addItemToPathTwo = async (userUid: any, userProvidedPathId: any, it
         const currentItems = pathDocSnapshot.exists() ? pathDocSnapshot.data()?.items || [] : [];
 
         // Check if the item already exists in the array
-        const itemAlreadyExists = currentItems.some((item: any) => item.itemId === itemData.itemId);
+        const itemAlreadyExists = currentItems.some((item: any) => item.itemId === itemData.id);
 
         if (!itemAlreadyExists) {
             // Update the path document to add a new item to the "items" array
@@ -137,7 +139,7 @@ export const addItemToPathTwo = async (userUid: any, userProvidedPathId: any, it
 
             console.log(`Item added to path ${userProvidedPathId} for user ${userUid}.`);
         } else {
-            console.log(`Item with itemId ${itemData.itemId} already exists in path ${userProvidedPathId}.`);
+            console.log(`Item with itemId ${itemData.id} already exists in path ${userProvidedPathId}.`);
             // You can handle this situation as needed, e.g., throw an error or return null
             return null;
         }

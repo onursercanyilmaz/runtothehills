@@ -81,7 +81,15 @@ export default function HomePage() {
     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
       {userData.map((path: any) => (
         <div id={path.pathId} key={path.pathId} style={{ margin: "50px", flex: "0 0 calc(10% - 100px)" }}>
-          <CButton style={{ width: '200px', height: "200px" }} buttonName={path.pathName} icon={<AppsListDetail24Filled />} onClick={() => navigate("/path/" + path.pathId)} />
+          <CButton style={{
+            width: '200px', height: "200px",
+            backgroundSize: 'cover', // You can adjust this value as needed
+            backgroundRepeat: 'no-repeat',
+            backgroundImage: `url("${path.pathImage || null}")`
+          }}
+            buttonName={path.pathName}
+            icon={<AppsListDetail24Filled />}
+            onClick={() => navigate("/path/" + path.pathId)} />
         </div>
       ))}
 
@@ -117,7 +125,7 @@ const ExampleButton = () => {
     const user = JSON.parse(localStorage.getItem('user')!);
 
     // Create a new path
-    const pathId = await addPath(user.uid, 'rust path');
+    const pathId = await addPath(user.uid, '.net journey', "https://play-lh.googleusercontent.com/yKB0JstxXgmfTkXMHJ5FYJlEwB3xExjlbSjSOSiZrPabINifoSlGzwhDgzqdpqeMiZY=w240-h480-rw");
 
     console.log('Path created successfully!', pathId);
   };
@@ -130,10 +138,12 @@ const ExampleButton = () => {
     // Add items to the newly created path
     await addItemToPathTwo(user.uid, 'net-journey', {
       id: uuidv4(),
-      name: 'rust',
-      description: 'rust is a systems programming language',
-      url: 'https://www.rust-lang.org/',
-      tags: ['systems', 'programming', 'language'],
+      name: 'c# basics',
+      image: 'https://play-lh.googleusercontent.com/dsCkmJE2Fa8IjyXERAcwc5YeQ8_NvbZ4_OI8LgqyjILpXUfS5YhEcnAMajKPrZI-og=s48-rw',
+      description: 'c# intoduction',
+      link: 'https://play.google.com/store/apps/details?id=com.csharp.champ&hl=en_US',
+      progress: 20,
+      platform: 'udemy'
     });
 
     console.log('Example data added successfully!');
