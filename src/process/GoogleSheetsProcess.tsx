@@ -168,3 +168,36 @@ export const deleteItemFromPath = async (userUid: any, userProvidedPathId: any, 
         console.error('Error deleting item from path:', error.message);
     }
 };
+
+// Function to edit a path's information
+export const editPath = async (userUid: any, userProvidedPathId: any, updatedPathData: Partial<IPathData>) => {
+    try {
+        const userDocRef = doc(db, 'users', userUid);
+        const pathsCollectionRef = collection(userDocRef, 'paths');
+
+        // Check if a path with the user-provided pathId exists
+        const pathQuery = query(
+            pathsCollectionRef,
+            where('pathId', '==', userProvidedPathId)
+        );
+        const pathQuerySnapshot = await getDocs(pathQuery);
+
+        if (pathQuerySnapshot.empty) {
+            // Path with the user-provided pathId does not exist
+            console.log(`Path with pathId ${userProvidedPathId} does not exist for user ${userUid}.`);
+            // You can handle this situation as needed, e.g., throw an error or return null
+            return null;
+        }
+
+        const pathDocRef = pathQuerySnapshot.docs[0].ref;
+
+        // Update the path document with the new data
+        await updateDoc(pathDocRef, updatedPathData);
+
+        console.log(`Path ${userProvidedPathId} updated for user ${userUid}.`);
+        return true;
+    } catch (error: any) {
+        console.error('Error updating path:', error.message);
+        return null;
+    }
+};

@@ -9,6 +9,7 @@ import { getUserData, addPath, addItemToPath } from '../../process/GoogleSheetsP
 import { useNavigate } from 'react-router-dom';
 import path from 'path';
 import { IPathData } from '../../constants/interfaces/IPathData';
+import urlChecker from '../../constants/urlChecker';
 
 const defaultPathData: IPathData = {
   pathName: "",
@@ -70,7 +71,6 @@ export default function HomePage() {
         .replace(/[^a-z0-9-]/g, '')
     }));
 
-    console.log(path)
   }
 
   useEffect(() => {
@@ -102,10 +102,10 @@ export default function HomePage() {
             backgroundSize: 'cover', // You can adjust this value as needed
             backgroundRepeat: 'no-repeat',
             backgroundImage: `url("${path.pathImage || null}")`,
-            alignItems: path.pathImage ? 'end' : "center",
+            alignItems: urlChecker((path.pathImage!).toString()) ? 'end' : "center",
           }}
             buttonName={path.pathName}
-            icon={path.pathImage ? null : <AppsListDetail24Filled />}
+            icon={urlChecker((path.pathImage!).toString()) ? null : <AppsListDetail24Filled />}
             onClick={() => navigate("/path/" + path.pathId)} />
         </div>
       ))}

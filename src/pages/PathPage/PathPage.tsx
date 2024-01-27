@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import { usePage } from '../../contexts/PageContext';
 import { useNavigate, useParams } from 'react-router-dom';
-import { addItemToPath, deleteItemFromPath, getUserData } from '../../process/GoogleSheetsProcess';
+import { addItemToPath, deleteItemFromPath, editPath, getUserData } from '../../process/GoogleSheetsProcess';
 import Item from '../../components/Item';
 import { Button, Input, Label } from '@fluentui/react-components';
-import { AddSquare24Filled, BorderNone24Filled, Delete24Filled } from "@fluentui/react-icons";
+import { AddSquare24Filled, BorderNone24Filled, Delete24Filled, Settings24Filled } from "@fluentui/react-icons";
 import Modal from '../../components/Modal';
 import { IItemsData } from '../../constants/interfaces/IItemsData';
 import ItemInput from '../../components/ItemInput';
 import { v4 as uuid } from 'uuid';
+import { IPathData } from '../../constants/interfaces/IPathData';
 
 interface PathPageProps {
   pageName?: any
@@ -24,13 +25,21 @@ const defaultItem: IItemsData = {
   id: uuid()
 }
 
+const defaultPathData: IPathData = {
+  pathName: "",
+  pathId: "",
+  items: [],
+  pathImage: ""
+}
+
 export default function PathPage(props: PathPageProps) {
   const { pathId } = useParams();
   const navigate = useNavigate();
-  const [pathData, setPathData] = React.useState<any>([]);
+  const [pathData, setPathData] = React.useState<IPathData>(defaultPathData);
   const [itemsData, setItemsData] = React.useState<any>([]);
   const [isEditModalOpen, setIsEditModalOpen] = React.useState<boolean>(false);
   const [isAddModalOpen, setIsAddModalOpen] = React.useState<boolean>(false);
+  const [isEditPathModalOpen, setIsEditPathModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
   const [item, setItem] = React.useState<IItemsData>(defaultItem);
   // Use the usePage hook to access pageName and setPageName
@@ -91,16 +100,16 @@ export default function PathPage(props: PathPageProps) {
   }
 
   const handleEditItem = async () => {
-    debugger
+
     if (item) {
-      var itemAddResult = await addItemToPath(user.uid, pathId, item);
-      if (itemAddResult !== null) {
+      var itemEditResult = await addItemToPath(user.uid, pathId, item);
+      if (itemEditResult !== null) {
         await fetchUserData();
         arrangePath();
         setIsEditModalOpen(false);
         setItem(defaultItem)
       }
-      else if (itemAddResult === null)
+      else if (itemEditResult === null)
         setError("item already exists")
       else
         setError("item couldn't edited successfully")
@@ -110,8 +119,8 @@ export default function PathPage(props: PathPageProps) {
 
   const handleDeleteItem = async () => {
     if (item) {
-      var itemAddResult = await deleteItemFromPath(user.uid, pathId, item)
-      if (itemAddResult !== null) {
+      var itemDeleteResult = await deleteItemFromPath(user.uid, pathId, item)
+      if (itemDeleteResult !== null) {
         await fetchUserData();
         arrangePath();
         setIsEditModalOpen(false);
@@ -122,6 +131,51 @@ export default function PathPage(props: PathPageProps) {
     }
   }
 
+  const handleEditPath = async () => {
+    if (pathData) {
+      setPathData((prevItem: any) => ({
+        ...prevItem,
+        pathId: pathData.pathName
+          .toLowerCase()
+          .replace(/ /g, '-')
+          .normalize('NFD') // Normalization Form Canonical Decomposition
+          .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+          .replace(/[^a-z0-9-]/g, '')
+      }));
+      var editedPath = pathData
+      editedPath.pathId = pathData.pathName
+        .toLowerCase()
+        .replace(/ /g, '-')
+        .normalize('NFD') // Normalization Form Canonical Decomposition
+        .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+        .replace(/[^a-z0-9-]/g, '')
+
+      var itemEditPathResult = await editPath(user.uid, pathId, editedPath)
+      if (itemEditPathResult !== null) {
+        await fetchUserData();
+        arrangePath();
+        setIsEditPathModalOpen(false);
+      }
+      else if (itemEditPathResult === null)
+        setError("path already exists")
+      else
+        setError("pathcouldn't edited successfully")
+
+    }
+  }
+
+  const handlePathChange = (e: any) => {
+    if (error !== "")
+      setError("");
+
+    setPathData((prevItem: any) => ({
+      ...prevItem,
+      [e.target.id]: e.target.value,
+    }));
+
+    console.log(pathData)
+
+  }
 
   useEffect(() => {
 
@@ -162,11 +216,25 @@ export default function PathPage(props: PathPageProps) {
           right: 0,
           height: "100px",
           marginTop: "20px",
-          backgroundColor: "#1f1f1f",
-          border: "var(--strokeWidthThin) solid var(--colorNeutralStroke1)",
+          backgroundColor: "transparent",
+          border: "none",
         }}
       >
         <AddSquare24Filled />
+      </Button>
+      <Button
+        onClick={() => { setError(""); setIsEditPathModalOpen(true) }}
+        style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          height: "100px",
+          marginTop: "20px",
+          backgroundColor: "transparent",
+          border: "none",
+        }}
+      >
+        <Settings24Filled />
       </Button>
 
     </div>
@@ -193,5 +261,25 @@ export default function PathPage(props: PathPageProps) {
 
       }
     />
-  </div>)
+    <Modal
+      setIsOpen={() => { setIsEditPathModalOpen(false); }}
+      isOpen={isEditPathModalOpen}
+      dialogTitle={'edit path'}
+      handleSubmit={() => handleEditPath()}
+      dialogBody={<>
+        <Label required htmlFor={"pathName"}>
+          path name
+        </Label>
+        <Input required value={pathData.pathName} type="text" id={"pathName"} placeholder='path name' onChange={(e: any) => handlePathChange(e)} />
+        <Label htmlFor={"pathImage"}>
+          path image
+        </Label>
+        <Input value={pathData.pathImage} type="text" id={"pathImage"} placeholder='path image' onChange={(e: any) => handlePathChange(e)} />
+        <Label htmlFor={"path-name-input"} style={{ color: "#f26257" }}>
+          {error}
+        </Label>
+      </>}
+
+    />
+  </div >)
 }
