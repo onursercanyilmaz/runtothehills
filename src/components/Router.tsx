@@ -10,7 +10,7 @@ export default function Router() {
     <Fragment>
       <Routes>
         <Route path='/login' Component={LoginPage} />
-        <Route path='/path/:pathid' Component={PathPage} />
+        <Route path='/path/:pathId' Component={PathPage} />
         <Route path='/' Component={HomePage} />
 
       </Routes>

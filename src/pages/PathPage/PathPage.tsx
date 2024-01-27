@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { usePage } from '../../contexts/PageContext';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getUserData } from '../../process/GoogleSheetsProcess';
+import { addItemToPath, getUserData } from '../../process/GoogleSheetsProcess';
 import Item from '../../components/Item';
 import { Button, Input, Label } from '@fluentui/react-components';
-import { AddSquare24Filled, BorderNone24Filled } from "@fluentui/react-icons";
+import { AddSquare24Filled, BorderNone24Filled, Delete24Filled } from "@fluentui/react-icons";
 import Modal from '../../components/Modal';
 import { IItemsData } from '../../constants/interfaces/IItemsData';
 import ItemInput from '../../components/ItemInput';
@@ -30,6 +30,7 @@ export default function PathPage(props: PathPageProps) {
   const [pathData, setPathData] = React.useState<any>([]);
   const [itemsData, setItemsData] = React.useState<any>([]);
   const [isEditModalOpen, setIsEditModalOpen] = React.useState<boolean>(false);
+  const [isAddModalOpen, setIsAddModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
   const [item, setItem] = React.useState<IItemsData>(defaultItem);
   // Use the usePage hook to access pageName and setPageName
@@ -44,50 +45,92 @@ export default function PathPage(props: PathPageProps) {
       ...prevItem,
       [e.target.id]: e.target.value
     }));
+
+  }
+
+  const fetchUserData = async () => {
+    // Get the user's data
+    if (user) {
+      const userData: any = await getUserData(user.uid);
+      var data = userData.find((path: any) => path.pathId === pathId)
+      if (!data) {
+        navigate('/');
+        return;
+      }
+      localStorage.setItem("userData", JSON.stringify(userData));
+    }
+    else {
+      navigate('/login');
+    }
+  }
+
+  const arrangePath = () => {
+    var userData = localStorage.getItem('userData')
+    var userDataJson = JSON.parse(userData!)
+    var pathData = userDataJson?.find((path: any) => path.pathId === pathId)
+    setPathData(pathData)
+    pathData && setItemsData(pathData.items)
+    pathData && page.setPageName(pathData.pathName);
+  }
+
+  const handleAddItem = async () => {
+    if (item) {
+      item.id = uuid();
+      var itemAddResult: any = await addItemToPath(user.uid, pathId, item);
+      if (itemAddResult !== null) {
+        await fetchUserData();
+        arrangePath();
+        setIsAddModalOpen(false);
+      }
+      else if (itemAddResult === null)
+        setError("item already exists")
+      else
+        setError("item couldn't added successfully")
+    }
   }
 
   const handleEditItem = async () => {
+    debugger
     if (item) {
-      var pathId = null //await handleAddItem(item)
-      if (pathId !== null)
+      var itemAddResult = await addItemToPath(user.uid, pathId, item);
+      if (itemAddResult !== null) {
+        await fetchUserData();
+        arrangePath();
         setIsEditModalOpen(false);
+      }
+      else if (itemAddResult === null)
+        setError("item already exists")
       else
-        setError("item name already exists")
+        setError("item couldn't edited successfully")
 
     }
   }
 
+  const handleDeleteItem = async () => {
+    if (item) {
+      var itemAddResult = null
+      if (itemAddResult !== null)
+        setIsEditModalOpen(false);
+      else
+        setError("item couldn't be deleted")
+
+    }
+  }
   const openExternalWebsite = (url: string) => {
     window.open(url, '_blank');
   };
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      // Get the user's data
-      if (user) {
-        const userData = await getUserData(user.uid);
-        localStorage.setItem("userData", JSON.stringify(userData));
-      }
-      else {
-        navigate('/login');
-      }
-    }
+
     fetchUserData();
-    var userData = localStorage.getItem('userData')
-    var userDataJson = JSON.parse(userData!)
-    var pathData = userDataJson.find((path: any) => path.id === pathId)
 
-    setPathData(pathData)
-    pathData && setItemsData(pathData.items)
-
-    pathData && page.setPageName(pathData.pathName);
+    arrangePath();
 
   }, []);
+
   return (<div>
 
     <div style={{ marginBottom: "20px", display: "block", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-
-
 
 
       {itemsData.length > 0 ? itemsData.map((item: any) => {
@@ -97,7 +140,7 @@ export default function PathPage(props: PathPageProps) {
           itemName={item.name}
           progress={item.progress}
           navigateToItemLink={() => openExternalWebsite(item.link)}
-          openEditItemModal={() => { setIsEditModalOpen(true); setItem(item) }}
+          openEditItemModal={() => { setError(""); setIsEditModalOpen(true); setItem(item) }}
           itemImage={item.image}
           platform={item.platform}
           id={item.id}
@@ -109,7 +152,7 @@ export default function PathPage(props: PathPageProps) {
         </div>}
 
       <Button
-        onClick={() => setIsEditModalOpen(true)}
+        onClick={() => { setError(""); setIsAddModalOpen(true) }}
         style={{
           position: "fixed",
           bottom: 0,
@@ -130,6 +173,18 @@ export default function PathPage(props: PathPageProps) {
       isOpen={isEditModalOpen}
       dialogTitle={'edit item'}
       handleSubmit={() => handleEditItem()}
+      dialogBody={
+        <>
+          <ItemInput item={item} error={error} handleItemChange={handleItemChange} />
+          <Button style={{ marginTop: "50px", border: "none" }} icon={<Delete24Filled />} content="delete item" onClick={() => { handleDeleteItem() }} />
+        </>
+      }
+    />
+    <Modal
+      setIsOpen={() => { setIsAddModalOpen(false); setItem(defaultItem) }}
+      isOpen={isAddModalOpen}
+      dialogTitle={'add item'}
+      handleSubmit={() => handleAddItem()}
       dialogBody={
         <ItemInput item={item} error={error} handleItemChange={handleItemChange} />
 

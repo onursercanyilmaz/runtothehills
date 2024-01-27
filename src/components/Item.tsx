@@ -3,6 +3,7 @@ import CButton from './CButton'
 import { ArrowRight24Filled } from "@fluentui/react-icons";
 import { Button, Field, Label, ProgressBar } from '@fluentui/react-components';
 import './components.css'
+import urlChecker from '../constants/urlChecker';
 
 interface ItemProps {
     itemDescription: string
@@ -25,13 +26,13 @@ export default function Item(props: ItemProps) {
                     <>
                         <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
                             <div style={{ display: "flex" }}>
-                                <img
+                                {urlChecker(props.itemImage) ? <img
                                     src={props.itemImage}
                                     width={50}
                                     height={50}
                                     style={{ borderRadius: "10%" }}
 
-                                />
+                                /> : ""}
                                 <div style={{ flexDirection: "column", display: "flex", alignContent: "center", alignSelf: "center", marginLeft: "10px" }}>
                                     <Label style={{ alignSelf: "center", color: "white", fontSize: "20px", }}>
                                         {props.itemName}
