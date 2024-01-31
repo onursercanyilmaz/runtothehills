@@ -14,7 +14,6 @@
 <img src="https://github.com/onursercanyilmaz/runtothehills/raw/master/src/assets/screenshots/addpath.png" width="400">
 <img src="https://github.com/onursercanyilmaz/runtothehills/raw/master/src/assets/screenshots/additem.png" width="400">
 <img src="https://github.com/onursercanyilmaz/runtothehills/raw/master/src/assets/screenshots/item.png" width="400">
-<img src="https://github.com/onursercanyilmaz/runtothehills/raw/master/src/assets/screenshots/additem.png" width="400">
 </div>
 
 ### provides to use your own firebase by adding your credentials <br/>
