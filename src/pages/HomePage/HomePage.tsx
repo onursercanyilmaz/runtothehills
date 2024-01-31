@@ -86,10 +86,7 @@ export default function HomePage() {
         navigate('/login');
       }
     }
-
     fetchUserData();
-
-
   }, []);
 
 
