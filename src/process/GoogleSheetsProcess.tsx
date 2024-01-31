@@ -1,4 +1,4 @@
-import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
+import { addDoc, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { db } from '../constants/firebaseConfig';
 import { IItemsData } from '../constants/interfaces/IItemsData';
 import { IPathData } from '../constants/interfaces/IPathData';
@@ -198,6 +198,39 @@ export const editPath = async (userUid: any, userProvidedPathId: any, updatedPat
         return true;
     } catch (error: any) {
         console.error('Error updating path:', error.message);
+        return null;
+    }
+};
+
+// Function to delete a path and all its items
+export const deletePath = async (userUid: any, userProvidedPathId: any) => {
+    try {
+        const userDocRef = doc(db, 'users', userUid);
+        const pathsCollectionRef = collection(userDocRef, 'paths');
+
+        // Check if a path with the user-provided pathId exists
+        const pathQuery = query(
+            pathsCollectionRef,
+            where('pathId', '==', userProvidedPathId)
+        );
+        const pathQuerySnapshot = await getDocs(pathQuery);
+
+        if (pathQuerySnapshot.empty) {
+            // Path with the user-provided pathId does not exist
+            console.log(`Path with pathId ${userProvidedPathId} does not exist for user ${userUid}.`);
+            // You can handle this situation as needed, e.g., throw an error or return null
+            return null;
+        }
+
+        const pathDocRef = pathQuerySnapshot.docs[0].ref;
+
+        // Delete the path document and all its items
+        await deleteDoc(pathDocRef);
+
+        console.log(`Path ${userProvidedPathId} deleted for user ${userUid}.`);
+        return true;
+    } catch (error: any) {
+        console.error('Error deleting path:', error.message);
         return null;
     }
 };

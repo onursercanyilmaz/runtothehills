@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { usePage } from '../../contexts/PageContext';
 import { useNavigate, useParams } from 'react-router-dom';
-import { addItemToPath, deleteItemFromPath, editPath, getUserData } from '../../process/GoogleSheetsProcess';
+import { addItemToPath, deleteItemFromPath, deletePath, editPath, getUserData } from '../../process/GoogleSheetsProcess';
 import Item from '../../components/Item';
 import { Button, Input, Label } from '@fluentui/react-components';
 import { AddSquare24Filled, BorderNone24Filled, Delete24Filled, Settings24Filled } from "@fluentui/react-icons";
@@ -177,6 +177,20 @@ export default function PathPage(props: PathPageProps) {
 
   }
 
+  const handleDeletePath = async () => {
+    if (pathData) {
+      var pathDeleteResult = await deletePath(user.uid, pathId)
+      if (pathDeleteResult !== null) {
+        await fetchUserData();
+        arrangePath();
+        setIsEditPathModalOpen(false);
+      }
+      else
+        setError("path couldn't be deleted")
+
+    }
+  }
+
   useEffect(() => {
 
     fetchUserData();
@@ -278,6 +292,8 @@ export default function PathPage(props: PathPageProps) {
         <Label htmlFor={"path-name-input"} style={{ color: "#f26257" }}>
           {error}
         </Label>
+        <Button style={{ marginTop: "50px", border: "none" }} icon={<Delete24Filled />} content="delete path" onClick={() => { handleDeletePath() }} />
+
       </>}
 
     />
